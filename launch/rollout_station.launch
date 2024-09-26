@@ -1,0 +1,16 @@
+<launch>
+    <arg name="robot" default="franka" doc="Choose your robot. Possible values: [franka, sawyer]"/>
+
+    <group if="$(eval arg('robot') == 'franka')">
+        <include file="$(find xmop_ros)/launch/franka_control.launch">
+        <arg name="robot_ip" value="172.16.0.2" />
+        </include>
+        <include file="$(find xmop_ros)/launch/realsense_camera.launch" />
+    </group>
+
+    <group if="$(eval arg('robot') == 'sawyer')">
+        <node name="joint_trajectory_action_server" pkg="intera_interface" type="joint_trajectory_action_server.py" args="--mode velocity"/>
+        <include file="$(find xmop_ros)/launch/zed2_camera.launch" />
+    </group>
+    
+</launch>

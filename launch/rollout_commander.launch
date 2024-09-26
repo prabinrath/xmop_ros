@@ -1,0 +1,13 @@
+<launch>
+    <arg name="robot" default="franka" doc="Choose your robot. Possible values: [franka, sawyer]"/>
+
+    <group if="$(eval arg('robot') == 'franka')">
+        <param name="robot_description" command="$(find xacro)/xacro $(find franka_description)/robots/panda/panda.urdf.xacro hand:=true arm_id:=panda"/>
+        <node type="rviz" name="rviz" pkg="rviz" args="-d $(find xmop_ros)/rviz/xmop_franka.rviz" />
+    </group>
+
+    <group if="$(eval arg('robot') == 'sawyer')">
+        <node type="rviz" name="rviz" pkg="rviz" args="-d $(find xmop_ros)/rviz/xmop_sawyer.rviz" />
+    </group>
+    
+</launch>

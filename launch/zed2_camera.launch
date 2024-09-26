@@ -1,0 +1,8 @@
+<launch>
+  <include file="$(find zed_wrapper)/launch/zed2.launch" />
+  
+  <!-- TF TRANSFORM FROM CALIBRATION -->
+  <node pkg="tf" type="static_transform_publisher" name="camera_link_broadcaster"
+    args="1.01393 -0.56424 0.668037 -0.36510671 0.20563215 0.79388401 0.44063669 base zed2_left_camera_frame 100" />
+
+</launch>

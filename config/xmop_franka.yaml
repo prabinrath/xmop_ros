@@ -1,0 +1,39 @@
+default_goal: [[0.3064, 0.0072, 0.4866], [-0.0142, 0.9996, 0.0084, -0.0202]] # default ee pose goal [[pos], [orientation]]
+joint_state_mask: [True, True, True, True, True, True, True] # robot might have unnecessary joints which can be ignored using this mask
+topics_config:
+  js_topic: '/franka_state_controller/joint_states' # topic for the robot's joint states in real-time
+  pc_topic: '/xmop/obstacle_points' # topic for the segmented obstacle pointcloud
+  offline_action_topic: '/effort_joint_trajectory_controller/follow_joint_trajectory'
+  rollout_rviz_topic: '/xmop/planned_path'
+  online_command_topic: '/effort_joint_trajectory_controller/follow_joint_trajectory/goal'
+
+xmop-s-online:
+  exec_freq: 3
+  query_factor: 0.01
+  smoothing_factor: 0
+  max_rollout_steps: 1 # not required
+
+xmop-s-offline:
+  exec_freq: 3
+  query_factor: 0.01
+  smoothing_factor: 0
+  max_rollout_steps: 1000
+
+xmop-online:
+  exec_freq: 3
+  query_factor: 0.01
+  smoothing_factor: 0.25
+  max_rollout_steps: 1 # not required
+
+xmop-offline:
+  exec_freq: 3
+  query_factor: 0.01
+  smoothing_factor: 0
+  max_rollout_steps: 200
+
+obstacle_seg:
+  pc_topic: '/front_cam/depth/color/points' # topic for the calibrated environment pointcloud with respect to robot's base 
+  frame_id: 'panda_link0' # pointcloud frame id
+  camera: 'realsense' # camera brand
+  hsv_thresh: [66, 91, 53, 255, 41, 239] # green screen
+  pc_transform: [[0.013959541865802108, 0.4939760916734418, -0.8693634181056514, 1.407989393127987], [0.9993702017464595, -0.03526041172042495, -0.003988033479371963, -0.004593746973803109], [-0.0326241050151079, -0.8687602231895729, -0.49415720476850533, 0.7741296384247733], [0.0, 0.0, 0.0, 1.0]]

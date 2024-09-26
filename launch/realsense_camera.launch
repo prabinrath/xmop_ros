@@ -1,0 +1,18 @@
+<launch>
+  <!-- serial number for front cam -->
+  <arg name="serial_number" default="938422074102" /> 
+
+  <include file="$(find realsense2_camera)/launch/rs_camera.launch">
+    <arg name="camera" value="front_cam" />
+    <arg name="serial_no" value="$(arg serial_number)" />
+    <arg name="filters" value="pointcloud" />
+    <arg name="align_depth" value="true" />
+    <arg name="ordered_pc" value="true" />
+  </include>
+
+  
+  <!-- TF TRANSFORM FROM CALIBRATION -->
+  <node pkg="tf" type="static_transform_publisher" name="camera_link_broadcaster"
+    args="1.31629098 0.006578 0.828391 -0.34230099 0.00893985 0.9393518 -0.0191912 panda_link0 front_cam_link 100" />
+
+</launch>
