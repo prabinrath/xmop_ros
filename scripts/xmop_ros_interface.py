@@ -13,7 +13,6 @@ from threading import Lock, Thread
 from scipy.interpolate import CubicSpline
 from copy import deepcopy
 import numpy as np
-import torch
 import rospy
 import yaml
 
@@ -45,22 +44,22 @@ class XMoPROSInterface():
         self.joint_state_mask = np.asarray(joint_state_mask)
 
         urdf_path = {
-            'franka': 'urdf/franka/franka_sample.urdf',
-            'sawyer': 'urdf/sawyer/sawyer_sample.urdf'
+            'franka': '/root/xmop/urdf/franka_panda/panda_sample.urdf',
+            'sawyer': '/root/xmop/urdf/sawyer/sawyer_sample.urdf'
             # Add your new robot URDF here
         }
 
-        with open('config/robot_point_sampler.yaml') as file:
+        with open('/root/xmop/config/robot_point_sampler.yaml') as file:
             robot_point_sampler = RealRobotPointSampler(
                 urdf_path=urdf_path[robot_name], 
-                config=yaml.safe_load(file)['neural_planning'],
+                config=yaml.safe_load(file)['xmop_planning'],
                 device=device)
             self.home_config = robot_point_sampler.home_config
 
         planner_config = dict(
             mode='singlestep' if algo == 'xmop-s' else 'multistep',
             urdf_path=urdf_path[robot_name],
-            config_folder='config/',
+            config_folder='/root/xmop/config/',
             model_dir=None,
             smoothing_factor=smoothing_factor
         )
@@ -90,6 +89,7 @@ class XMoPROSInterface():
 
         # action client for open-loop control with feedback 
         self.offline_action_client = SimpleActionClient(topics_config['offline_action_topic'], FollowJointTrajectoryAction)
+        rospy.loginfo('Waiting for robot action server')
         self.offline_action_client.wait_for_server()
 
         self.rollout_rviz_publisher = rospy.Publisher(
@@ -104,7 +104,7 @@ class XMoPROSInterface():
             queue_size=1,
         )
 
-        # State machine setup
+        # state machine setup
         self.planned_traj = None
         self.goal_eef = None
         self.planning_lock = Lock()
