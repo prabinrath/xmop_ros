@@ -40,6 +40,9 @@ class HsvObstacleSegmentation():
         rgb = np.frombuffer(np.ascontiguousarray(np_pc['rgb']).data, dtype=np.uint8)
         rgb = rgb.reshape(msg.height*msg.width,4)[:,:3].reshape(msg.height,msg.width,3)
 
+        # set this ros parameter to true for showing the hsv threshold sliders 
+        # calibrate to the experiment lighting conditions
+        # set the ros parameter to false 
         if rospy.get_param('hsv_tuning', False):
             cv2.imshow('rgb', rgb)
             cv2.waitKey(1)
@@ -73,15 +76,15 @@ class HsvObstacleSegmentation():
         lower_hsv = np.array([self.low_h, self.low_s, self.low_v])
         upper_hsv = np.array([self.high_h, self.high_s, self.high_v])
         hsv = cv2.cvtColor(rgb, cv2.COLOR_BGR2HSV)
-        mask = cv2.inRange(hsv, lower_hsv, upper_hsv) 
+        mask = cv2.inRange(hsv, lower_hsv, upper_hsv) # only works for monocolor obstacles
         mask_indices = mask==255
 
         if np.any(mask_indices):
             local_points = points[mask_indices].reshape(-1,3)
             local_points = local_points[np.random.choice(local_points.shape[0], self.num_obstacle_points, replace=True)]
             local_points = np.concatenate((local_points, np.ones((local_points.shape[0],1))), axis=-1)
-            global_points = (self.T_base_depth_optical@local_points.T).T[:,:3]
-            global_points = global_points[global_points[:,0] > 0.3]
+            global_points = (self.T_base_depth_optical@local_points.T).T[:,:3] # use calibration matrix to transform pc to robot's base
+            global_points = global_points[global_points[:,0] > 0.3] # crop the pc to remove unwanted points
             global_points = global_points[global_points[:,0] < 1.5]
             
             self.pc_pub.publish(self.numpy_to_rosmsg(global_points.astype(np.float32), self.frame_id))

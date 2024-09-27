@@ -2,10 +2,10 @@ default_goal: [[0.3064, 0.0072, 0.4866], [-0.0142, 0.9996, 0.0084, -0.0202]] # d
 joint_state_mask: [False, True, True, True, True, True, True, True, False] # robot might have unnecessary joints which can be ignored using this mask
 topics_config:
   js_topic: '/robot/joint_states' # topic for the robot's joint states in real-time
-  pc_topic: '/xmop/obstacle_points' # topic for the segmented obstacle pointcloud
-  offline_action_topic: '/robot/limb/right/follow_joint_trajectory'
+  pc_topic: '/xmop/obstacle_points' # topic for the segmented and calibrated obstacle pointcloud
+  offline_action_topic: '/robot/limb/right/follow_joint_trajectory' # from robot action server
   rollout_rviz_topic: '/xmop/planned_path'
-  online_command_topic: '/robot/limb/right/follow_joint_trajectory/goal'
+  online_command_topic: '/robot/limb/right/follow_joint_trajectory/goal' # from robot action server
 
 xmop-s-online:
   exec_freq: 3
@@ -26,15 +26,16 @@ xmop-online:
   max_rollout_steps: 1 # not required
 
 xmop-offline:
-  exec_freq: 3
-  query_factor: 0.01
-  smoothing_factor: 0
+  exec_freq: 3 # higher makes the rollout smoother
+  query_factor: 0.01 # determines granularity of the trajectory
+  smoothing_factor: 0 # higher maker the motion smoother but takes longer time to reach the goal
   max_rollout_steps: 200
 
 obstacle_seg:
-  pc_topic: '/zed2/zed_node/point_cloud/cloud_registered' # topic for the calibrated environment pointcloud with respect to robot's base 
+  pc_topic: '/zed2/zed_node/point_cloud/cloud_registered' # topic for the environment pointcloud
   frame_id: 'base' # pointcloud frame id
   camera: 'zed2' # camera brand
   hsv_thresh: [66, 91, 53, 255, 35, 255] # green screen
+  # this is printed by the generate_transform_<camera-name>.py script
   pc_transform: [[-0.3450727908159598, -0.849784199894781, -0.3984866153933796, 1.01393], [0.5494734888531554, -0.5271094491483449, 0.6482549758128119, -0.56424], [-0.7609228962818939, 0.004737322842573782, 0.6488250177715552, 0.668037], [0.0, 0.0, 0.0, 1.0]]
 

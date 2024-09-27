@@ -10,6 +10,8 @@ T_link_color_optical = np.array([[ 0.,  0.,  1.,  0.],
 # camera extrinsics from Hand-to-Eye calibration (changes)
 T_base_color_optical = np.zeros((4,4))
 T_base_color_optical[3,3] = 1
+# Tf transform from .launch file generated after ROS Hand-to-Eye calibration
+# # See https://github.com/moveit/moveit_tutorials/blob/master/doc/hand_eye_calibration/hand_eye_calibration_tutorial.rst
 calib_text = "1.01393 -0.56424 0.668037   0.90263 0.256361 -0.0968864 -0.331891"
 calib_np = []
 for val in calib_text.split(' '):
@@ -31,4 +33,4 @@ print(calib_text)
 
 T_base_depth_optical = np.copy(T_base_link)
 print(T_base_depth_optical[:3,3], Quaternion(matrix=T_base_depth_optical[:3,:3]).q[[1,2,3,0]])
-print(T_base_depth_optical.tolist())
+print(T_base_depth_optical.tolist()) # print the calibration matrix and update the config file
