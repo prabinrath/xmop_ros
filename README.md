@@ -1,6 +1,9 @@
 # ROS Package for [XMoP](https://prabinrath.github.io/xmop/)
 ![ROS: Noetic](https://img.shields.io/badge/ROS-Noetic-blue.svg) <br>
-XMoP is a novel configuration-space neural policy that solves motion planning problems zero-shot for unseen robotic manipulators. This repository contains the ROS package for sim-to-real deployment of XMoP neural planner. The official implementation repository can be found [here](https://github.com/prabinrath/xmop). We provide a docker container pre-configured with ROS, PyTorch, and other dependencies to aid the deployment.
+XMoP is a novel configuration-space neural policy that solves motion planning problems zero-shot for unseen robotic manipulators. This repository contains the ROS package for sim-to-real deployment of XMoP neural planner. The official implementation repository can be found [here](https://github.com/prabinrath/xmop). We provide a docker container pre-configured with ROS, PyTorch, and other dependencies to aid the deployment. <br>
+<div align="center">
+  <img src="./rviz_demo.gif" alt="rviz demo">
+</div>
 
 ## Usage
 1. Clone [xmop](https://github.com/prabinrath/xmop), and [xmop_ros](https://github.com/prabinrath/xmop_ros) to your local.
